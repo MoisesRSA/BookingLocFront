@@ -127,21 +127,23 @@
 /* ─── Mobile: bottom navigation bar ─────────────────────── */
 @media (max-width: 768px) {
   .sidebar {
-    /* Remove sticky/desktop styles */
-    width: 100%;
-    height: auto;
-    margin: 0;
-    position: static;   /* flex child — no fixed/sticky */
+    /* Reset completo de propriedades do desktop */
+    position: static;
     top: auto;
-    flex-shrink: 0;     /* Never compress — always visible at bottom */
-    border-radius: var(--radius-md) var(--radius-md) 0 0;
-    padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
+    height: auto;
+    min-height: 0;
+    margin: 0;
+    /* Layout como bottom bar */
+    width: 100%;
     flex-direction: row;
+    flex-shrink: 0;      /* Nunca comprime — sempre visível na base */
+    order: 2;            /* Fica depois do main no flex column */
     align-items: center;
     justify-content: space-around;
+    padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-    order: 2; /* Make sure it comes after the main content in the column */
   }
 
   .sidebar-brand {
