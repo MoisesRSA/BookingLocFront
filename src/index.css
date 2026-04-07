@@ -48,8 +48,6 @@ body {
     radial-gradient(circle at 15% 50%, rgba(138, 43, 226, 0.15), transparent 25%),
     radial-gradient(circle at 85% 30%, rgba(67, 97, 238, 0.15), transparent 25%);
   background-attachment: fixed;
-  display: flex;
-  flex-direction: column;
 }
 
 h1, h2, h3, h4, h5, h6 {

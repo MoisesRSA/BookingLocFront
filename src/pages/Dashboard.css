@@ -24,6 +24,7 @@
   flex-direction: column;
   height: 100vh;
   overflow-y: auto;
+  min-width: 0; /* Prevent flex child overflow */
 }
 
 .dashboard-content {
@@ -32,13 +33,15 @@
   gap: 24px;
 }
 
-/* Timeline Header (Date Navigator) */
+/* ─── Timeline Header (Date Navigator) ───────────────────── */
 .timeline-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 12px 24px;
   border-radius: var(--radius-md);
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .date-navigator {
@@ -89,26 +92,28 @@
   border-radius: var(--radius-pill);
   font-size: 0.85rem;
   border: 1px solid rgba(43, 226, 138, 0.3);
+  white-space: nowrap;
 }
 
-/* Timeline Grid */
+/* ─── Timeline Grid ──────────────────────────────────────── */
 .timeline-container {
   flex: 1;
   overflow: auto;
   border-radius: var(--radius-md);
+  -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
 }
 
 .timeline-grid {
   display: grid;
-  grid-template-columns: 80px repeat(4, minmax(200px, 1fr)); /* Fix 4 resources for now */
+  grid-template-columns: 70px repeat(4, minmax(180px, 1fr));
   width: 100%;
-  min-width: 900px;
+  min-width: 800px; /* Forces horizontal scroll on small screens */
 }
 
 .timeline-cell {
   border-right: 1px solid var(--surface-border);
   border-bottom: 1px solid var(--surface-border);
-  min-height: 80px; /* Equivalent to 1 hour */
+  min-height: 80px;
   padding: 8px;
   transition: background var(--transition-fast);
   position: relative;
@@ -126,6 +131,9 @@
   justify-content: center;
   border-bottom: 2px solid var(--surface-border);
   min-height: 50px;
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 8px 4px;
 }
 
 .corner {
@@ -142,9 +150,9 @@
   align-items: flex-start;
   justify-content: flex-end;
   color: var(--text-muted);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   padding-top: 12px;
-  padding-right: 12px;
+  padding-right: 8px;
   position: sticky;
   left: 0;
   background: rgba(26, 22, 37, 0.95);
@@ -158,12 +166,12 @@
 }
 
 .empty-slot:hover {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.04);
 }
 
-/* Booked Status Block */
+/* ─── Booked Status Block ────────────────────────────────── */
 .booked-cell {
-  padding: 4px; /* Space inside the cell */
+  padding: 4px;
 }
 
 .booking-block {
@@ -183,17 +191,17 @@
 
 .booking-block strong {
   color: var(--danger);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
 
 .booking-block span {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   line-height: 1.2;
 }
 
-/* Modals */
+/* ─── Modals ─────────────────────────────────────────────── */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -207,6 +215,7 @@
   justify-content: center;
   z-index: 999;
   animation: fadeIn 0.2s ease;
+  padding: 16px;
 }
 
 .booking-modal {
@@ -216,6 +225,8 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
 }
 
 .modal-header {
@@ -253,4 +264,110 @@
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+/* ─── Tablet ─────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .dashboard-main {
+    padding: 16px 16px 16px 0;
+  }
+
+  .timeline-header {
+    padding: 10px 16px;
+  }
+}
+
+/* ─── Mobile ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .dashboard-layout {
+    flex-direction: column;
+    overflow: visible;
+  }
+
+  .dashboard-main {
+    padding: 12px 12px 100px; /* bottom padding for the bottom nav bar */
+    height: auto;
+    overflow-y: visible;
+  }
+
+  .dashboard-content {
+    gap: 12px;
+  }
+
+  .timeline-header {
+    padding: 10px 12px;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: var(--radius-sm);
+  }
+
+  .date-navigator {
+    gap: 8px;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .date-display {
+    padding: 6px 12px;
+    gap: 8px;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .date-input {
+    font-size: 0.95rem;
+  }
+
+  .badge-info {
+    font-size: 0.78rem;
+    padding: 4px 10px;
+  }
+
+  /* Timeline grid: compact on mobile */
+  .timeline-grid {
+    grid-template-columns: 56px repeat(4, minmax(140px, 1fr));
+    min-width: 620px;
+  }
+
+  .timeline-cell {
+    min-height: 64px;
+    padding: 4px;
+  }
+
+  .header-cell {
+    min-height: 40px;
+    font-size: 0.75rem;
+    padding: 4px 2px;
+  }
+
+  .time-label {
+    font-size: 0.7rem;
+    padding-top: 8px;
+    padding-right: 4px;
+  }
+
+  .booking-block {
+    padding: 4px;
+    gap: 2px;
+  }
+
+  .booking-block strong {
+    font-size: 0.7rem;
+  }
+
+  .booking-block span {
+    font-size: 0.75rem;
+  }
+
+  /* Modal: full width on mobile */
+  .booking-modal {
+    padding: 20px 16px;
+    gap: 16px;
+    border-radius: var(--radius-md);
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 12px;
+  }
 }

@@ -11,18 +11,18 @@ export default function Sidebar({ handleLogout }) {
       <nav className="sidebar-nav">
         <NavLink to="/dashboard" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
           <LayoutDashboard size={20} />
-          <span>Locais</span>
+          <span className="nav-label">Locais</span>
         </NavLink>
         <NavLink to="/my-bookings" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
           <Calendar size={20} />
-          <span>Minhas Reservas</span>
+          <span className="nav-label">Reservas</span>
         </NavLink>
       </nav>
 
       <div className="sidebar-footer">
         <button onClick={handleLogout} className="nav-item logout-btn">
           <LogOut size={20} />
-          <span>Sair</span>
+          <span className="nav-label">Sair</span>
         </button>
       </div>
     </aside>
