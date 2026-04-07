@@ -111,6 +111,7 @@
   min-height: 80px; /* Equivalent to 1 hour */
   padding: 8px;
   transition: background var(--transition-fast);
+  position: relative;
 }
 
 .header-cell {
