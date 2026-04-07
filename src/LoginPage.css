@@ -1,0 +1,104 @@
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100vw;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background Blobs for Glassmorphism Effect */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: -1;
+  animation: float 10s infinite ease-in-out alternate;
+}
+
+.blob-1 {
+  width: 400px;
+  height: 400px;
+  background: rgba(138, 43, 226, 0.3); /* Primary */
+  top: -100px;
+  left: -100px;
+}
+
+.blob-2 {
+  width: 300px;
+  height: 300px;
+  background: rgba(67, 97, 238, 0.3); /* Secondary */
+  bottom: -50px;
+  right: -50px;
+  animation-delay: 2s;
+}
+
+@keyframes float {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-30px) scale(1.05); }
+}
+
+.login-card {
+  width: 100%;
+  max-width: 450px;
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  text-align: center;
+  background: rgba(26, 22, 37, 0.6); /* Slightly more opaque for readability */
+}
+
+.login-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo-icon-wrapper {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  padding: 16px;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 20px rgba(138, 43, 226, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.login-header h1 {
+  font-size: 2.5rem;
+  margin: 0;
+  background: linear-gradient(to right, #fff, #A09DB0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+.login-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.login-body h2 {
+  font-size: 1.5rem;
+}
+
+.login-body p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 16px;
+}
+
+.google-btn-wrapper {
+  display: flex;
+  justify-content: center;
+  transform: scale(1.1); /* Slightly enlarge the default google button */
+}
