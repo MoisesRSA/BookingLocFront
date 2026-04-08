@@ -182,7 +182,11 @@ export default function Dashboard({ setAuth }) {
       <Sidebar handleLogout={handleLogout} />
       
       <main className="dashboard-main">
-        <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+        <Header 
+          searchQuery={searchQuery} 
+          onSearchChange={setSearchQuery} 
+          handleLogout={handleLogout}
+        />
         
         <div className="dashboard-content">
           <div className="timeline-header glass-panel">

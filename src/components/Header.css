@@ -95,14 +95,31 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  cursor: pointer;
   padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--surface-border);
   border-radius: var(--radius-pill);
-  transition: background var(--transition-fast);
 }
 
-.user-profile:hover {
-  background: rgba(255, 255, 255, 0.05);
+.header-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--danger);
+  cursor: pointer;
+  padding: 4px 8px;
+  margin-left: 8px;
+  border-left: 1px solid var(--surface-border);
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+}
+
+.header-logout-btn:hover {
+  color: #ff6b8b;
+  transform: scale(1.05);
 }
 
 .avatar {
@@ -251,5 +268,15 @@
   .notification-dropdown {
     right: -60px;
     width: min(280px, calc(100vw - 32px));
+  }
+
+  .logout-text {
+    display: none;
+  }
+
+  .header-logout-btn {
+    border-left: none;
+    margin-left: 4px;
+    padding: 6px;
   }
 }

@@ -152,17 +152,20 @@
 
   .sidebar-nav {
     flex-direction: row;
-    flex: none;
+    display: flex;
+    flex: 2;            /* Toma 2/3 do espaço para os 2 itens */
     gap: 0;
     justify-content: space-around;
-    width: 100%;
   }
 
   .sidebar-footer {
     margin-top: 0;
     border-top: none;
     padding-top: 0;
+    display: flex;
+    flex: 1;            /* Toma 1/3 do espaço para o botão Sair */
     flex-direction: row;
+    justify-content: center;
   }
 
   .nav-item {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Bell, Search, User, X } from 'lucide-react';
+import { Bell, Search, User, X, LogOut } from 'lucide-react';
 import './Header.css';
 
 export default function Header({ searchQuery = '', onSearchChange }) {
@@ -102,6 +102,11 @@ export default function Header({ searchQuery = '', onSearchChange }) {
           <span className="user-name">
             {localStorage.getItem("user_name") || "Funcionário"}
           </span>
+          
+          <button className="header-logout-btn" onClick={handleLogout} title="Sair">
+            <LogOut size={18} />
+            <span className="logout-text">Sair</span>
+          </button>
         </div>
       </div>
     </header>
