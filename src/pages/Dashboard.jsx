@@ -224,8 +224,15 @@ export default function Dashboard({ setAuth }) {
                           style={{ gridColumn, gridRow, gridRowEnd: `span ${duration}` }}
                         >
                           <div className="booking-block glass-panel">
-                            <strong>Ocupado</strong>
-                            <span>{booking.description || 'Reunião'}</span>
+                            <span className="booking-status">Ocupado</span>
+                            <strong className="booking-name">
+                              {booking.employeeName || 'Funcionário'}
+                            </strong>
+                            <span className="booking-time">
+                              {new Date(booking.startTime).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                              {' – '}
+                              {new Date(booking.endTime).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                            </span>
                           </div>
                         </div>
                       );
