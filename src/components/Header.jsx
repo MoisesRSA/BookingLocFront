@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Bell, Search, User } from 'lucide-react';
+import { Bell, Search, User, X } from 'lucide-react';
 import './Header.css';
 
-export default function Header() {
+export default function Header({ searchQuery = '', onSearchChange }) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([]);
 
@@ -36,7 +36,22 @@ export default function Header() {
     <header className="glass-panel top-header">
       <div className="search-bar">
         <Search size={18} className="search-icon" />
-        <input type="text" className="search-input" placeholder="Buscar recursos ou horários..." />
+        <input
+          type="text"
+          className="search-input"
+          placeholder="Buscar por pessoa ou local..."
+          value={searchQuery}
+          onChange={(e) => onSearchChange?.(e.target.value)}
+        />
+        {searchQuery && (
+          <button
+            className="search-clear-btn"
+            onClick={() => onSearchChange?.('')}
+            title="Limpar pesquisa"
+          >
+            <X size={14} />
+          </button>
+        )}
       </div>
       <div className="header-actions">
 

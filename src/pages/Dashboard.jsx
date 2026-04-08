@@ -40,6 +40,7 @@ export default function Dashboard({ setAuth }) {
   const [apiBookings, setApiBookings] = useState([]);
   const [lastUpdated, setLastUpdated] = useState(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const POLL_INTERVAL = 15000; // 15 segundos
 
   const handleLogout = () => {
@@ -181,7 +182,7 @@ export default function Dashboard({ setAuth }) {
       <Sidebar handleLogout={handleLogout} />
       
       <main className="dashboard-main">
-        <Header />
+        <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
         
         <div className="dashboard-content">
           <div className="timeline-header glass-panel">
@@ -276,10 +277,16 @@ export default function Dashboard({ setAuth }) {
                       const endH = new Date(booking.endTime).getHours();
                       const duration = Math.max(endH - startH, 1);
 
+                      // Lógica de pesquisa: destaca se combina, esmaece se não combina
+                      const q = searchQuery.trim().toLowerCase();
+                      const resourceName = res.name.toLowerCase();
+                      const employeeName = (booking.employeeName || '').toLowerCase();
+                      const isMatch = !q || employeeName.includes(q) || resourceName.includes(q);
+
                       return (
                         <div
                           key={`${res.id}-${hour}`}
-                          className="timeline-cell booked-cell"
+                          className={`timeline-cell booked-cell ${q && !isMatch ? 'search-dimmed' : ''} ${q && isMatch ? 'search-match' : ''}`}
                           style={{ gridColumn, gridRow, gridRowEnd: `span ${duration}` }}
                         >
                           <div className="booking-block glass-panel">

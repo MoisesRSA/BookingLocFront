@@ -18,6 +18,25 @@
   width: 300px;
   transition: all var(--transition-fast);
   flex-shrink: 0;
+  gap: 4px;
+}
+
+.search-clear-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.search-clear-btn:hover {
+  color: var(--danger);
+  background: rgba(239, 71, 111, 0.1);
 }
 
 .search-bar:focus-within {

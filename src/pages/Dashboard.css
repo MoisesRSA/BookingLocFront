@@ -263,6 +263,22 @@
   opacity: 0.45;
 }
 
+/* ─── Estados de busca ───────────────────────────────────── */
+.search-dimmed {
+  opacity: 0.18;
+  filter: blur(1px);
+  transition: opacity 0.2s ease, filter 0.2s ease;
+  pointer-events: none;
+}
+
+.search-match {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+  box-shadow: 0 0 12px rgba(138, 43, 226, 0.4);
+  z-index: 1;
+  transition: outline 0.2s ease, box-shadow 0.2s ease;
+}
+
 /* ─── Booked Status Block ────────────────────────────────── */
 .booked-cell {
   padding: 4px;
