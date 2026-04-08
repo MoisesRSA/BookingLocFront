@@ -100,7 +100,17 @@ export default function Dashboard({ setAuth }) {
     handleDateChange(d.toISOString().split('T')[0]);
   };
 
+  // Verifica se um slot já passou (somente no dia de hoje)
+  const isPastSlot = (hour) => {
+    const isToday = currentDateString === getTodayStr();
+    if (!isToday) return false; // Datas futuras: nunca bloqueadas
+    return hour < new Date().getHours(); // Hora já passou
+  };
+
   const openBookingSlot = (locationId, hour) => {
+    // Bloqueia agendamento em horários passados
+    if (isPastSlot(hour)) return;
+
     const formattedHour = hour.toString().padStart(2, '0');
     const startObj = `${currentDateString}T${formattedHour}:00:00`;
     const endObj = `${currentDateString}T${(hour + 1).toString().padStart(2, '0')}:00:00`;
@@ -116,6 +126,20 @@ export default function Dashboard({ setAuth }) {
 
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
+
+    // Validação: impede agendamento no passado (caso o usuário edite o datetime manualmente)
+    const startDate = new Date(bookingData.startTime);
+    if (startDate < new Date()) {
+      alert('⚠️ Não é possível agendar um horário que já passou.');
+      return;
+    }
+    // Validação: fim deve ser depois do início
+    const endDate = new Date(bookingData.endTime);
+    if (endDate <= startDate) {
+      alert('⚠️ O horário de fim deve ser após o horário de início.');
+      return;
+    }
+
     try {
       const payloadToSend = {
           location: bookingData.location,
@@ -241,6 +265,8 @@ export default function Dashboard({ setAuth }) {
                       return b.location === res.id && startH < hour && endH > hour;
                     });
 
+                    const isPast = isPastSlot(hour);
+
                     // Célula coberta por um agendamento multi-hora: não renderizar
                     // O booked-cell com span já ocupa esse espaço
                     if (isCovered) return null;
@@ -271,13 +297,14 @@ export default function Dashboard({ setAuth }) {
                       );
                     }
 
+                    // Slot vazio
                     return (
                       <div
                         key={`${res.id}-${hour}`}
-                        className="timeline-cell empty-slot"
+                        className={`timeline-cell ${isPast ? 'past-slot' : 'empty-slot'}`}
                         style={{ gridColumn, gridRow }}
-                        onClick={() => openBookingSlot(res.id, hour)}
-                        title="Disponível! Clique para agendar"
+                        onClick={isPast ? undefined : () => openBookingSlot(res.id, hour)}
+                        title={isPast ? 'Horário já passou' : 'Disponível! Clique para agendar'}
                       ></div>
                     );
                   })

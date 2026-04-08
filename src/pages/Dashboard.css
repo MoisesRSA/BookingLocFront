@@ -250,6 +250,19 @@
   background: rgba(255, 255, 255, 0.04);
 }
 
+/* Slot no passado: bloqueado visualmente */
+.past-slot {
+  cursor: not-allowed;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 4px,
+    rgba(255, 255, 255, 0.02) 4px,
+    rgba(255, 255, 255, 0.02) 8px
+  );
+  opacity: 0.45;
+}
+
 /* ─── Booked Status Block ────────────────────────────────── */
 .booked-cell {
   padding: 4px;
