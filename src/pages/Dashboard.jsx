@@ -48,6 +48,32 @@ export default function Dashboard({ setAuth }) {
     setAuth(false);
   };
 
+  // Normaliza uma string de data/hora para garantir parsing correto no fuso local
+  // Se a string não tiver 'Z' nem offset, o JS pode interpretar como UTC em alguns navegadores
+  const normalizeDateTime = (str) => {
+    if (!str) return str;
+    // Se já tem 'Z' ou offset (+/-HH:MM), retorna como está
+    if (str.endsWith('Z') || /[+-]\d{2}:\d{2}$/.test(str)) return str;
+    // Sem indicador de fuso: trata como horário local adicionando o offset atual
+    return str; // será tratado como local pelo navegador (sem Z = local)
+  };
+
+  // Extrai a hora LOCAL de uma string de data/hora
+  const getLocalHour = (dateStr) => {
+    const normalized = normalizeDateTime(dateStr);
+    return new Date(normalized).getHours();
+  };
+
+  // Extrai apenas a parte da data (YYYY-MM-DD) no fuso local
+  const getLocalDateStr = (dateStr) => {
+    const normalized = normalizeDateTime(dateStr);
+    const d = new Date(normalized);
+    const y = d.getFullYear();
+    const mo = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${mo}-${day}`;
+  };
+
   // Busca TODOS os agendamentos para exibir na timeline
   const fetchBookings = useCallback(async (showRefreshAnim = false) => {
     if (showRefreshAnim) setIsRefreshing(true);
@@ -57,11 +83,15 @@ export default function Dashboard({ setAuth }) {
       });
       if (res.ok) {
         const data = await res.json();
+        console.log("[Dashboard] Agendamentos recebidos:", data);
         setApiBookings(data || []);
         setLastUpdated(new Date());
+      } else {
+        const text = await res.text();
+        console.error(`[Dashboard] Erro ${res.status} ao buscar agendamentos:`, text);
       }
     } catch (e) {
-      console.error("Erro ao buscar agendamentos", e);
+      console.error("[Dashboard] Erro de rede ao buscar agendamentos:", e);
     } finally {
       if (showRefreshAnim) setTimeout(() => setIsRefreshing(false), 600);
     }
@@ -81,9 +111,10 @@ export default function Dashboard({ setAuth }) {
     return () => window.removeEventListener('focus', onFocus);
   }, [fetchBookings]);
 
-  // Filtra as reservas do array global que pertencem SÓ a data de "hoje"
+  // Filtra as reservas do array global que pertencem SÓ à data selecionada
+  // Usa getLocalDateStr para evitar problemas de fuso horário
   const getDailyBookings = () => {
-    return apiBookings.filter(b => b.startTime && b.startTime.startsWith(currentDateString));
+    return apiBookings.filter(b => b.startTime && getLocalDateStr(b.startTime) === currentDateString);
   };
   const dailyBookings = getDailyBookings();
 
@@ -261,12 +292,12 @@ export default function Dashboard({ setAuth }) {
                     const gridColumn = colIndex + 2; // +2 because col 1 is time-label
 
                     const booking = dailyBookings.find(
-                      b => b.location === res.id && new Date(b.startTime).getHours() === hour
+                      b => b.location === res.id && getLocalHour(b.startTime) === hour
                     );
 
                     const isCovered = dailyBookings.some(b => {
-                      const startH = new Date(b.startTime).getHours();
-                      const endH = new Date(b.endTime).getHours();
+                      const startH = getLocalHour(b.startTime);
+                      const endH = getLocalHour(b.endTime);
                       return b.location === res.id && startH < hour && endH > hour;
                     });
 
@@ -277,8 +308,8 @@ export default function Dashboard({ setAuth }) {
                     if (isCovered) return null;
 
                     if (booking) {
-                      const startH = new Date(booking.startTime).getHours();
-                      const endH = new Date(booking.endTime).getHours();
+                      const startH = getLocalHour(booking.startTime);
+                      const endH = getLocalHour(booking.endTime);
                       const duration = Math.max(endH - startH, 1);
 
                       // Lógica de pesquisa: destaca se combina, esmaece se não combina
