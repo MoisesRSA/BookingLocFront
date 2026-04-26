@@ -82,7 +82,7 @@ export default function Dashboard({ setAuth }) {
   const fetchBookings = useCallback(async (showRefreshAnim = false) => {
     if (showRefreshAnim) setIsRefreshing(true);
     try {
-      const res = await fetch("https://schedule-1-o6pj.onrender.com/booking/timeline", {
+      const res = await fetch("http://localhost:8080/booking/timeline", {
         headers: { "Authorization": "Bearer " + localStorage.getItem("my_token") }
       });
       if (res.ok) {
@@ -101,12 +101,31 @@ export default function Dashboard({ setAuth }) {
     }
   }, []);
 
-  // Polling a cada 15 segundos
+  // Busca inicial e Conexão SSE para atualizações em tempo real
   useEffect(() => {
     fetchBookings(false);
-    const interval = setInterval(() => fetchBookings(false), POLL_INTERVAL);
-    return () => clearInterval(interval);
-  }, [currentDateString, fetchBookings]);
+
+    const token = localStorage.getItem("my_token");
+    if (!token) return;
+
+    // Conecta no endpoint de Server-Sent Events do backend
+    const eventSource = new EventSource(`http://localhost:8080/booking/stream?token=${token}`);
+    
+    // Ouve especificamente eventos chamados "bookingUpdate"
+    eventSource.addEventListener("bookingUpdate", (e) => {
+      console.log("[SSE] Notificação de agendamento recebida! Atualizando grid...");
+      fetchBookings(false);
+    });
+
+    eventSource.onerror = (err) => {
+      console.error("[SSE] Erro de conexão.", err);
+      eventSource.close();
+    };
+
+    return () => {
+      eventSource.close();
+    };
+  }, [fetchBookings]);
 
   // Refetch quando o usuário volta para a aba
   useEffect(() => {
@@ -215,7 +234,7 @@ export default function Dashboard({ setAuth }) {
           status: "SCHEDULED"
       };
 
-      const res = await fetch("https://schedule-1-o6pj.onrender.com/booking/create", {
+      const res = await fetch("http://localhost:8080/booking/create", {
         method: "POST",
         headers: { 
           "Authorization": "Bearer " + localStorage.getItem("my_token"),
